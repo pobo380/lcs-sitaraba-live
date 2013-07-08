@@ -1,0 +1,17 @@
+<head>
+  <title>LCSしたらば実況</title>
+</head>
+
+<body>
+  {{> hello}}
+</body>
+
+<template name="hello">
+  <h1>Hello World!</h1>
+  <input type="text" value="" id="startAt">
+  <input type="text" value="" id="endAt">
+  <input type="button" value="send">
+  {{#each greeting}}
+  <p><span>{{res_idx}}</span> {{text}}</p>
+  {{/each}}
+</template>
