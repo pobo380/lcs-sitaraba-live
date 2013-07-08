@@ -40,76 +40,61 @@ if (Meteor.isServer) {
 
     // update thread list.
     Meteor.setInterval(function () {
-      var url = 'http://jbbs.livedoor.jp/netgame/7609/subject.txt';
+      Sitaraba.get_subject_txt('netgame', '7609', {}, function (err, threads) {
+        if (!_.isNull(err)) {
+          console.error("## GET " + url + " failed.");
+          console.error(err);
+          return;
+        }
 
-      Meteor.http.get(url, {encoding: null}, function (err, result) {
-        if (result.statusCode === 200) {
-          var converted = Converter.convert(result.content).toString();
-          var lines = converted.split("\n");
-          var jikkyo_threads = _.filter(lines, function (line) {
-            return (/(Twitch.*?LoL.*?youtube)/i).test(line);
-          });
-          var thread_ids = _.map(jikkyo_threads, function (thread) {
-            return _.first(thread.split("."));
-          });
-
-          _.each(thread_ids, function (thread_id) {
-            if (_.isUndefined(Threads.findOne({id: thread_id}))) {
-              console.log("- Thread " + thread_id + " is added.");
-              Threads.insert({id: thread_id, next_res: 1});
-            }
+        _.chain(threads)
+          .filter(function (thread) {
+            return (/(Twitch.*?LoL.*?youtube)/i).test(thread.title);
+          })
+          .uniq(false, function (thread) {
+            return thread.id;
+          })
+          .filter(function (thread) {
+            return _.isUndefined(Threads.findOne({id: thread.id}));
+          })
+          .each(function (thread) {
+            Threads.insert({id: thread.id, next_res: 1, title: thread.title});
           });
 
           console.log("## GET subject.txt done");
-        }
-        else {
-          console.error("## GET subject.txt failed!!");
-        }
       });
     }, 5 * 1000);
 
     // update messages
     Meteor.setInterval(function () {
-      var base_url = 'http://jbbs.livedoor.jp/bbs/rawmode.cgi/netgame/7609/';
       var threads = Threads.find({next_res: {$lte: 1000}}, {limit: 6});
 
       _.each(threads.fetch(), function (thread) {
-        var url = base_url + thread.id + '/' + thread.next_res + '-';
-        console.log(url);
-
-        Meteor.http.get(url, {encoding: null, timeout: 1000}, function (err, result) {
-          if (!_.isNull(err)) { return console.error(err); }
-
-          if (result.statusCode === 200) {
-            if (_.isUndefined(result.content)) { return; }
-            var converted = Converter.convert(result.content).toString();
-            var lines = converted.split("\n").slice(0, -1);
-            var parsed = _.map(lines, function (line) {
-              var e = line.split("<>");
-              return {
-                thread_id: thread.id,
-                res_idx:   parseInt(e[0]),
-                name:      e[1],
-                date:      new Date(Date.parse(e[3])),
-                text:      e[4],
-                res_id:    e[6]
-              };
-            });
-
-            _.each(parsed, function (msg) {
-              Messages.insert(msg);
-            });
-
-            Threads.update({id: thread.id}, {$set: {next_res: _.last(parsed).res_idx + 1}});
-
-            console.log("GET " + url + " done.");
+        Sitaraba.get_thread('netgame', '7609', thread.id, thread.next_res,
+                            {timeout: 1000}, function (err, posts) {
+          if (!_.isNull(err)) {
+            console.error("GET " + thread.id + " failed.");
+            console.error(err);
+            return; 
           }
-          else {
-            console.error("GET " + url + " failed. StatusCode: " + result.statusCode);
+
+          if (_.isEmpty(posts)) {
+            console.log("GET " + thread.id + " up-to-date.");
+            return;
           }
+
+          _.each(posts, function (post) {
+            Messages.insert(post);
+          });
+
+          console.log(_.last(posts));
+
+          Threads.update({id: thread.id}, {$set: {next_res: _.last(posts).res_idx + 1}});
+
+          console.log("GET " + thread.id + " done.");
         });
       });
-    }, 0.8 * 1000);
+    }, 2 * 1000);
 
     Meteor.publish("messages", function(startAt, endAt) {
       var startDate = new Date(Date.parse(startAt)),
