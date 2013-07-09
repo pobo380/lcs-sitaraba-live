@@ -32,7 +32,7 @@ Sitaraba = {
         callback(err, null);
       }
       else {
-        var lines  = result.content.split("\n"),
+        var lines  = result.content.split("\n").slice(0, -1),
             parsed = _.map(lines, function (line) {
               var id_cgi_title = line.split(',');
               return {

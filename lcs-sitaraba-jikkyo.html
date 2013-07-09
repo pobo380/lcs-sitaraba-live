@@ -3,14 +3,40 @@
 </head>
 
 <body>
-  {{> hello}}
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span10 offset1">
+            <h1><a class="brand" href="/">LCS したらば実況</a></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" style="padding-top:100px">
+    <div class="row-fluid">
+      <div class="span8 offset1">
+        <h2>TwitchTV</h2>
+        <object bgcolor='#000000' data='http://www.twitch.tv/widgets/archive_embed_player.swf' height='567' id='clip_embed_player_flash' type='application/x-shockwave-flash' width='930'>
+          <param name='movie' value='http://www.twitch.tv/widgets/archive_embed_player.swf' />
+          <param name='allowScriptAccess' value='always' />
+          <param name='allowNetworking' value='all' />
+          <param name='allowFullScreen' value='true' />
+          <param name='flashvars' value='start_volume=25&amp;auto_play=false&amp;title=EU%2BLCS%2B2013%2BSummer%2BW4D2&amp;channel=riotgames&amp;archive_id=427066117' />
+        </object><br />
+      </div>
+      <div class="span2">
+        <h2>Comments</h2>
+        <div id="comments">
+          {{> comments }}
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  <input type="text" value="" id="startAt">
-  <input type="text" value="" id="endAt">
-  <input type="button" value="send">
+<template name="comments">
   {{#each greeting}}
   <p><span>{{res_idx}}</span> {{text}}</p>
   {{/each}}
