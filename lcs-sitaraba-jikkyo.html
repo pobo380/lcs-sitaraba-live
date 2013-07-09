@@ -28,6 +28,7 @@
       </div>
     </div>
   </div>
+  {{> twitch_api }}
 </body>
 
 <template name="comments">
@@ -43,5 +44,11 @@
     <param name='allowNetworking' value='all' />
     <param name='allowFullScreen' value='true' />
     <param name='flashvars' value='start_volume=25&amp;auto_play=true&amp;title=EU%2BLCS%2B2013%2BSummer%2BW4D2&amp;channel=riotgames&amp;archive_id={{archive_id}}' />
-  </object><br />
+  </object>
 </template>
+
+<template name="twitch_api">
+  <div id="twitch_api">
+  </div>
+</template>
+

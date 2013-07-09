@@ -3,17 +3,32 @@
  */
 Meteor.startup(function () {
   Backbone.history.start({pushState: true});
+
+  Deps.autorun(function () {
+    var archive_id = Session.get("archive_id"),
+    base_url   = "https://api.twitch.tv/kraken/videos/a" + archive_id,
+    jsonp_url  = base_url + '?callback=Template.twitch_api.video_callback';
+
+    var twitch_api_tag = $('#twitch_api');
+    var script_tag     = $('<script type="text/javascript">');
+
+    script_tag.attr('src', jsonp_url);
+
+    twitch_api_tag.empty();
+    twitch_api_tag.append(script_tag);
+  });
 });
 
 var AppRouter = Backbone.Router.extend({
   routes: {
-    ""           : "top_page",
-    "video/:id" : "video_page",
+    ""            : "top_page",
+    "archive/:id" : "archive_page",
   },
   top_page: function () {
   },
-  video_page: function (id) {
+  archive_page: function (id) {
     console.log(id);
+    Session.set("archive_id", id);
   },
 });
 
@@ -38,8 +53,12 @@ Template.comments.events({
 });
 
 Template.video.archive_id = function () {
-  return 427066117;
+  return Session.get("archive_id");
 };
+
+Template.twitch_api.video_callback = function (video_info) {
+  console.log(video_info);
+}
 
 //Deps.autorun(function () {
 //  Meteor.subscribe("messages", Session.get("startAt"), Session.get("endAt"));
