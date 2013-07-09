@@ -18,13 +18,7 @@
     <div class="row-fluid">
       <div class="span8 offset1">
         <h2>TwitchTV</h2>
-        <object bgcolor='#000000' data='http://www.twitch.tv/widgets/archive_embed_player.swf' height='567' id='clip_embed_player_flash' type='application/x-shockwave-flash' width='930'>
-          <param name='movie' value='http://www.twitch.tv/widgets/archive_embed_player.swf' />
-          <param name='allowScriptAccess' value='always' />
-          <param name='allowNetworking' value='all' />
-          <param name='allowFullScreen' value='true' />
-          <param name='flashvars' value='start_volume=25&amp;auto_play=false&amp;title=EU%2BLCS%2B2013%2BSummer%2BW4D2&amp;channel=riotgames&amp;archive_id=427066117' />
-        </object><br />
+        {{> video }}
       </div>
       <div class="span2">
         <h2>Comments</h2>
@@ -40,4 +34,14 @@
   {{#each greeting}}
   <p><span>{{res_idx}}</span> {{text}}</p>
   {{/each}}
+</template>
+
+<template name="video">
+  <object bgcolor='#000000' data='http://www.twitch.tv/widgets/archive_embed_player.swf' height='567' id='clip_embed_player_flash' type='application/x-shockwave-flash' width='930'>
+    <param name='movie' value='http://www.twitch.tv/widgets/archive_embed_player.swf' />
+    <param name='allowScriptAccess' value='always' />
+    <param name='allowNetworking' value='all' />
+    <param name='allowFullScreen' value='true' />
+    <param name='flashvars' value='start_volume=25&amp;auto_play=true&amp;title=EU%2BLCS%2B2013%2BSummer%2BW4D2&amp;channel=riotgames&amp;archive_id={{archive_id}}' />
+  </object><br />
 </template>
