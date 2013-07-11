@@ -7,7 +7,7 @@
     <div class="navbar-inner">
       <div class="container-fluid">
         <div class="row-fluid">
-          <div class="span10 offset1">
+          <div class="span12">
             <h1><a class="brand" href="/">LCS したらば実況</a></h1>
           </div>
         </div>
@@ -16,11 +16,12 @@
   </div>
   <div class="container-fluid" style="padding-top:100px">
     <div class="row-fluid">
-      <div class="span8 offset1">
+      <div class="span7 offset1">
         <h2>TwitchTV</h2>
         {{> video }}
+        {{> time  }} 
       </div>
-      <div class="span2">
+      <div class="span3">
         <h2>Comments</h2>
         <div id="comments">
           {{> comments }}
@@ -33,18 +34,26 @@
 
 <template name="comments">
   {{#each greeting}}
-  <p><span>{{res_idx}}</span> {{text}}</p>
+    <div id="{{thread_id}}_{{res_idx}}" style="margin-bottom: 14px; box-shadow: 0 10px 6px -6px #777;">
+      <span>{{res_idx}}</span> <span style="">{{date}}</span>
+      <pre style="color: #111111">{{text}}</pre>
+    </div>
   {{/each}}
 </template>
 
 <template name="video">
-  <object bgcolor='#000000' data='http://www.twitch.tv/widgets/archive_embed_player.swf' height='567' id='clip_embed_player_flash' type='application/x-shockwave-flash' width='930'>
-    <param name='movie' value='http://www.twitch.tv/widgets/archive_embed_player.swf' />
+  <object name="archive_site_player_flash" data='http://www-cdn.jtvnw.net/widgets/archive_site_player.swf' height='654' id='archive_site_player_flash' type='application/x-shockwave-flash' width='1072'>
     <param name='allowScriptAccess' value='always' />
     <param name='allowNetworking' value='all' />
     <param name='allowFullScreen' value='true' />
-    <param name='flashvars' value='start_volume=25&amp;auto_play=true&amp;title=EU%2BLCS%2B2013%2BSummer%2BW4D2&amp;channel=riotgames&amp;archive_id={{archive_id}}' />
+    <param name='flashvars' value='auto_play=true&amp;channel=riotgames&amp;archive_id={{archive_id}}&amp;enable_javascript=true&amp;videoId=a{{archive_id}}&amp;hostname=www.twitch.tv&amp;loadCallback=Template.video.cb"' />
   </object>
+</template>
+
+<template name="time">
+  <div>
+    <h4>{{ current }}</h4>
+  </div>
 </template>
 
 <template name="twitch_api">

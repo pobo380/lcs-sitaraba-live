@@ -72,13 +72,17 @@ Sitaraba = {
         // TODO: return empty Array
         var lines  = result.content.split("\n").slice(0, -1), // remove a empty string
             parsed = _.map(lines, function (line) {
-              var splitted = line.split("<>");
+              var splitted      = line.split("<>");
+              var text_replaced = splitted[4].replace(/<br>/g, "\n") 
+                                            .replace(/&gt;/g,  ">")
+                                            .replace(/&lt;/g,  "<");
+
               return {
                 thread_id: parseInt(thread_id),
                 res_idx:   parseInt(splitted[0]),
                 name:      splitted[1],
                 date:      new Date(Date.parse(splitted[3])),
-                text:      splitted[4],
+                text:      text_replaced,
                 res_id:    splitted[6]
               };
             });

@@ -1,5 +1,5 @@
 /**
  * Common
  */
-Messages = new Meteor.Collection("messages");
+Comments = new Meteor.Collection("comments");
 

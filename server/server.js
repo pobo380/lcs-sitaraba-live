@@ -40,7 +40,7 @@ Meteor.startup(function () {
   });
 
   /**
-   * Update messages from thread list
+   * Update comments from thread list
    */
   var get_thread_func = function (thread) {
     return function (callback) {
@@ -67,7 +67,7 @@ Meteor.startup(function () {
         }
 
         _.each(posts, function (post) {
-          Messages.insert(post);
+          Comments.insert(post);
         });
 
         Threads.update({id: thread.id}, {$set: {next_res: _.last(posts).res_idx + 1}});
@@ -112,18 +112,12 @@ Meteor.startup(function () {
   });
 
 
-  Meteor.publish("messages", function(startAt, endAt) {
-    var startDate = new Date(Date.parse(startAt)),
-        endDate   = new Date(Date.parse(endAt));
+  Meteor.publish("comments", function(start_at, end_at) {
+    var start_date = new Date(start_at),
+        end_date   = new Date(end_at);
 
-    var result = Messages.find({date: {$gte: startDate, $lte: endDate}});
+    var result = Comments.find({date: {$gte: start_date, $lte: end_date}});
 
-    console.log('---------------------');
-    console.log(startDate);
-    console.log(endDate);
-    console.log(startAt);
-    console.log(endAt);
-    console.log(result.fetch());
     return result;
   });
 });
