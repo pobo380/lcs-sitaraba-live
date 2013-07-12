@@ -21,6 +21,26 @@ _.mixin({
 
 
 Utils = {
+  // hook console.log
+  hook_console_log: function (callback) {
+    var console  = window.console,
+        _log     = console ? console.log : function(){},
+        _console = {log: function () {_log.apply(console, arguments)} };
+
+    console.log = function () {
+      callback(arguments, _console);
+      _log.apply(console, arguments);
+    };
+  },
+  
+  hook_console_log_if: function (test, callback) {
+    this.hook_console_log(function (obj, console) {
+      if (test(obj, console)) {
+        callback(obj, console);
+      }
+    });
+  },
+   
   // enhance async.js for Meteor.
   async : {
     _wait_func: function (ms) {

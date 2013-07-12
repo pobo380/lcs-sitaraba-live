@@ -6,42 +6,60 @@ Meteor.startup(function () {
 
   Session.set("forwarding", 8 * 1000);
 
-  Meteor.setTimeout(function (){
-    Deps.autorun(function () {
-      var archive_id = Session.get("archive_id"),
-      base_url   = "https://api.twitch.tv/kraken/videos/a" + archive_id,
-      jsonp_url  = base_url + '?callback=Template.twitch_api.video_info_callback';
+  /**
+   * Hook console.log and detect a event 'video loaded'.
+   */
+  var handle = null;
+  Utils.hook_console_log_if(
+    // detect event
+    function (obj) {
+      return _.first(obj).LR_TITLE === "riotgames";
+    },
 
-      var twitch_api_tag = $('#twitch_api');
-      var script_tag     = $('<script type="text/javascript">');
+    // after video loaded.
+    function (obj, console) {
+      // send request to get recording date and video length.
+      var archive_id = Session.get("archive_id"),
+          base_url   = "https://api.twitch.tv/kraken/videos/a" + archive_id,
+          jsonp_url  = base_url + '?callback=Template.twitch_api.video_info_callback';
+
+      var twitch_api_tag = $('#twitch_api'),
+          script_tag     = $('<script type="text/javascript">');
 
       script_tag.attr('src', jsonp_url);
 
       twitch_api_tag.empty();
       twitch_api_tag.append(script_tag);
+
+      // start to observe twitch player.
+      var player_ids = [
+        "#live_site_player_flash",
+        "#live_embed_player_flash",
+        "#archive_site_player_flash",
+      ];
+      var player = $(player_ids.join(",")).get(0);
+
+      var loaded_at = null, lasttime_at = null;
+
+      if (! _.isNull(handle)) {
+        Meteor.clearInterval(handle);
+      }
+
+      handle = Meteor.setInterval(function () {
+        var play_time  = player.get_time() * 1000,
+            start_at   = Session.get("start_at"),
+            current_at = start_at + play_time + Session.get("forwarding");
+
+        loaded_at = _.max([loaded_at, current_at]);
+
+        Session.set("current_at", current_at);
+      }, 1 * 1000);
     });
-
-    var player_ids = [
-      "#live_site_player_flash",
-      "#archive_site_player_flash",
-      "#jtv_archive_flash",
-      "#live_embed_player_flash",
-      "#clip_site_player_flash",
-      "#clip_embed_player_flash"
-    ];
-    var player = $(player_ids.join(",")).get(0);
-
-    Meteor.setInterval(function () {
-      var play_time  = player.get_time() * 1000,
-          start_at   = Session.get("start_at"),
-          current_at = start_at + play_time + Session.get("forwarding");
-
-      console.log(new Date(current_at));
-      Session.set("current_at", current_at);
-    }, 1 * 1000);
-  }, 6 * 1000);
 });
 
+/**
+ * Routing
+ */
 var AppRouter = Backbone.Router.extend({
   routes: {
     ""            : "top_page",
@@ -59,7 +77,7 @@ var AppRouter = Backbone.Router.extend({
 window.router = new AppRouter;
 
 /**
- * Template
+ * Templates
  */
 Template.comments.greeting = function () {
   var start_date   = new Date(Session.get("start_at")),
@@ -76,10 +94,10 @@ Template.video.archive_id = function () {
 };
 
 Template.time.current = function () {
-  return new Date(Session.get("current_at"));
+  return _.isUndefined(Session.get("current_at"))
+         ? ""
+         : new Date(Session.get("current_at"));
 }
-
-Template.video.cb = function () {console.log('aaaaa')};
 
 Template.twitch_api.video_info_callback = function (video_info) {
   var start_at   = Date.parse(video_info.recorded_at),
@@ -92,3 +110,7 @@ Template.twitch_api.video_info_callback = function (video_info) {
 
   Meteor.subscribe("comments", start_at, end_at);
 }
+
+Template.logs.history = function () {
+  return Session.get("logs");
+};

@@ -2,7 +2,6 @@
  * Server Code
  */
 Meteor.startup(function () {
-  var Converter = (new Meteor.require('iconv').Iconv('euc-jp', 'utf-8//ignore'))
   var Threads   = new Meteor.Collection("threads");
 
   /**
@@ -115,6 +114,9 @@ Meteor.startup(function () {
   Meteor.publish("comments", function(start_at, end_at) {
     var start_date = new Date(start_at),
         end_date   = new Date(end_at);
+
+    console.log(start_date);
+    console.log(end_date);
 
     var result = Comments.find({date: {$gte: start_date, $lte: end_date}});
 
