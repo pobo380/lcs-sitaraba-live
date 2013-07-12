@@ -14,18 +14,16 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid" id="main">
-    <div class="row-fluid">
-      <div class="span7 offset1">
-        <h2>TwitchTV</h2>
-        {{> video }}
-        {{> time  }} 
-      </div>
-      <div class="span3">
-        <h2>Comments</h2>
-        <div id="comments">
-          {{> comments }}
-        </div>
+  <div id="main">
+    <div id="video_container">
+      <h2>TwitchTV</h2>
+      {{> video }}
+      {{> time  }} 
+    </div>
+    <div id="comments_container">
+      <h2>Comments</h2>
+      <div id="comments">
+        {{> comments }}
       </div>
     </div>
   </div>
@@ -48,7 +46,7 @@
     <param name='allowScriptAccess' value='always' />
     <param name='allowNetworking' value='all' />
     <param name='allowFullScreen' value='true' />
-    <param name='flashvars' value='auto_play=true&amp;channel=riotgames&amp;archive_id={{archive_id}}&amp;enable_javascript=true&amp;videoId=a{{archive_id}}&amp;hostname=www.twitch.tv&amp;loadCallback=Template.video.cb"' />
+    <param name='flashvars' value='auto_play=true&amp;channel=riotgames&amp;archive_id={{archive_id}}&amp;enable_javascript=true&amp;videoId=a{{archive_id}}&amp;hostname=www.twitch.tv' />
   </object>
 </template>
 
