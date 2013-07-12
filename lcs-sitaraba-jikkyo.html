@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid" style="padding-top:100px">
+  <div class="container-fluid" id="main">
     <div class="row-fluid">
       <div class="span7 offset1">
         <h2>TwitchTV</h2>
@@ -35,9 +35,10 @@
 
 <template name="comments">
   {{#each greeting }}
-    <div id="{{thread_id}}_{{res_idx}}" style="margin-bottom: 14px; box-shadow: 0 10px 6px -6px #777;">
-      <span style="font-weight: bold">{{res_idx}}</span> <span style="">{{date}}</span>
-      <pre style="color: #111111">{{text}}</pre>
+    <div id="{{thread_id}}_{{res_idx}}" class="comment">
+      <span class="res_idx">{{res_idx}}</span>
+      <span class="date">{{date}}</span>
+      <pre class="text">{{text}}</pre>
     </div>
   {{/each}}
 </template>
