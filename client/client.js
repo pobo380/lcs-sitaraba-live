@@ -7,6 +7,15 @@ Meteor.startup(function () {
   Session.set("forwarding", 8 * 1000);
 
   /**
+   * Resizing twitch player.
+   */
+  var player = $('#archive_site_player_flash');
+  $(window).resize(function (e) {
+    player.height(player.width() * 0.5931);
+    console.log(player.width());
+  });
+
+  /**
    * Hook console.log and detect a event 'video loaded'.
    */
   var handle = null;

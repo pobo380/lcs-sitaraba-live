@@ -1,5 +1,10 @@
+// Variables
+comments_width = 430px
+player_comments_margin = 30px
+
 div#main
-  padding-top 100px
+  margin: 0 5%
+  margin-top 100px
 
 div#comments
   overflow-y scroll
@@ -16,3 +21,16 @@ div#comments
 
     pre.text
       color #111
+
+div#video_container
+  margin-right comments_width + player_comments_margin
+
+  div._wrap
+    width 100%
+
+    div#player_container
+      width 100%
+
+div#comments_container
+  width comments_width
+  float right

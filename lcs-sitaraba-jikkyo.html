@@ -15,15 +15,19 @@
     </div>
   </div>
   <div id="main">
-    <div id="video_container">
-      <h2>TwitchTV</h2>
-      {{> video }}
-      {{> time  }} 
-    </div>
     <div id="comments_container">
       <h2>Comments</h2>
       <div id="comments">
         {{> comments }}
+      </div>
+    </div>
+    <div id="video_container">
+      <div class="_wrap">
+        <h2>TwitchTV</h2>
+        <div id="player_container">
+          {{> video }}
+        </div>
+        {{> time  }} 
       </div>
     </div>
   </div>
@@ -42,7 +46,7 @@
 </template>
 
 <template name="video">
-  <object name="archive_site_player_flash" data='http://www-cdn.jtvnw.net/widgets/archive_site_player.swf' height='654' id='archive_site_player_flash' type='application/x-shockwave-flash' width='1072'>
+  <object name="archive_site_player_flash" data='http://www-cdn.jtvnw.net/widgets/archive_site_player.swf' height='738px' id='archive_site_player_flash' type='application/x-shockwave-flash' width='100%'>
     <param name='allowScriptAccess' value='always' />
     <param name='allowNetworking' value='all' />
     <param name='allowFullScreen' value='true' />
