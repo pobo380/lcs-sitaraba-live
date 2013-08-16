@@ -98,9 +98,9 @@ var AppRouter = Backbone.Router.extend({
 
   live : function () {
     Session.set("is_live", true);
-    var five_hours_ago = (new Date()).getTime() - 5 * 60 * 60 * 1000;
+    var one_hour_ago = (new Date()).getTime() - 1 * 60 * 60 * 1000;
     var future = (new Date("2100/1/1")).getTime();
-    Meteor.subscribe("comments", five_hours_ago, future);
+    Meteor.subscribe("comments", one_hour_ago, future);
   }
 });
 
