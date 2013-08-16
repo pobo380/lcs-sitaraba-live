@@ -86,6 +86,7 @@ var AppRouter = Backbone.Router.extend({
   routes: {
     ""            : "top_page",
     "archive/:id" : "archive_page",
+    "live"        : "live",
   },
 
   top_page: function () {
@@ -94,6 +95,13 @@ var AppRouter = Backbone.Router.extend({
   archive_page: function (id) {
     Session.set("archive_id", id);
   },
+
+  live : function () {
+    Session.set("is_live", true);
+    var five_hours_ago = (new Date()).getTime() - 5 * 60 * 60 * 1000;
+    var future = (new Date("2100/1/1")).getTime();
+    Meteor.subscribe("comments", five_hours_ago, future);
+  }
 });
 
 window.router = new AppRouter;
@@ -101,13 +109,23 @@ window.router = new AppRouter;
 /**
  * Templates
  */
-Template.comments.greeting = function () {
+Template.content.is_live = function () {
+  return Session.get("is_live");
+}
+
+Template.archive_comments.comments = function () {
   var start_date   = new Date(Session.get("start_at")),
       current_date = new Date(Session.get("current_at"));
 
   var result = Comments.find({date: {$gte: start_date, $lte: current_date}},
                              {sort: {date: -1}, limit: 30});
 
+  return result;
+};
+
+Template.live_comments.comments = function () {
+  var result = Comments.find({}, {sort: {date: -1}, limit: 30});
+  console.log(result);
   return result;
 };
 
@@ -132,7 +150,3 @@ Template.twitch_api.video_info_callback = function (video_info) {
 
   Meteor.subscribe("comments", start_at, end_at);
 }
-
-Template.logs.history = function () {
-  return Session.get("logs");
-};

@@ -3,6 +3,10 @@
 </head>
 
 <body>
+  {{> content }}
+</body>
+
+<template name="content">
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container-fluid">
@@ -18,31 +22,58 @@
     <div id="comments_container">
       <h2>Comments</h2>
       <div id="comments">
-        {{> comments }}
+        {{#if is_live }}
+          {{> live_comments }}
+        {{else}}
+          {{> archive_comments }}
+        {{/if}}
       </div>
     </div>
     <div id="video_container">
       <div class="_wrap">
         <h2>TwitchTV</h2>
         <div id="player_container">
-          {{> archive_video }}
+          {{#if is_live }}
+            {{> live_video }}
+          {{else}}
+            {{> archive_video }}
+          {{/if}}
         </div>
         {{> time  }} 
       </div>
     </div>
   </div>
-  {{> logs }}
   {{> twitch_api }}
-</body>
+</template>
 
-<template name="comments">
-  {{#each greeting }}
+<template name="live_comments">
+  {{#each comments }}
     <div id="{{thread_id}}_{{res_idx}}" class="comment">
       <span class="res_idx">{{res_idx}}</span>
       <span class="date">{{date}}</span>
       <pre class="text">{{text}}</pre>
     </div>
   {{/each}}
+</template>
+
+<template name="archive_comments">
+  {{#each comments }}
+    <div id="{{thread_id}}_{{res_idx}}" class="comment">
+      <span class="res_idx">{{res_idx}}</span>
+      <span class="date">{{date}}</span>
+      <pre class="text">{{text}}</pre>
+    </div>
+  {{/each}}
+</template>
+
+<template name="live_video">
+  <object data="http://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" height="738px" id="live_site_player_flash" name="live_site_player_flash" type="application/x-shockwave-flash" width="100%">
+    <param name="allowFullScreen" value="true">
+    <param name="wmode" value="opaque">
+    <param name="allowScriptAccess" value="always">
+    <param name="allowNetworking" value="all">
+    <param name="flashvars" value="channel=riotgames&amp;hostname=www.twitch.tv&amp;auto_play=true">
+  </object>
 </template>
 
 <template name="archive_video">
@@ -63,10 +94,4 @@
 <template name="twitch_api">
   <div id="twitch_api">
   </div>
-</template>
-
-<template name="logs">
-  {{#each history }}
-    <p>{{txt}}</p>
-  {{/each}}
 </template>
