@@ -111,7 +111,7 @@ Template.comments.greeting = function () {
   return result;
 };
 
-Template.video.archive_id = function () {
+Template.archive_video.archive_id = function () {
   return Session.get("archive_id");
 };
 

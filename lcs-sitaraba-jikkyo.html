@@ -25,7 +25,7 @@
       <div class="_wrap">
         <h2>TwitchTV</h2>
         <div id="player_container">
-          {{> video }}
+          {{> archive_video }}
         </div>
         {{> time  }} 
       </div>
@@ -45,7 +45,7 @@
   {{/each}}
 </template>
 
-<template name="video">
+<template name="archive_video">
   <object name="archive_site_player_flash" data='http://www-cdn.jtvnw.net/widgets/archive_site_player.swf' height='738px' id='archive_site_player_flash' type='application/x-shockwave-flash' width='100%'>
     <param name='allowScriptAccess' value='always' />
     <param name='allowNetworking' value='all' />
