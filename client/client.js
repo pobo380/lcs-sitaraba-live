@@ -118,7 +118,7 @@ Template.archive_comments.comments = function () {
       current_date = new Date(Session.get("current_at"));
 
   var result = Comments.find({date: {$gte: start_date, $lte: current_date}},
-                             {sort: {date: -1}, limit: 30});
+                             {sort: {date: -1}, limit: 15});
 
   return result;
 };
