@@ -125,7 +125,6 @@ Template.archive_comments.comments = function () {
 
 Template.live_comments.comments = function () {
   var result = Comments.find({}, {sort: {date: -1}, limit: 30});
-  console.log(result);
   return result;
 };
 
