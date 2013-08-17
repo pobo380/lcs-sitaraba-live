@@ -44,7 +44,7 @@ Meteor.startup(function () {
   var get_thread_func = function (thread) {
     return function (callback) {
       Sitaraba.get_thread('netgame', '7609', thread.id, thread.next_res,
-                          {timeout: 1000}, function (err, posts) {
+                          {timeout: 5000}, function (err, posts) {
         if (err) {
           if (err.code == 'ESOCKETTIMEDOUT') {
             console.error("GET " + thread.id + " timeout.");
