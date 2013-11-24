@@ -80,7 +80,7 @@ Meteor.startup(function () {
 
   var get_threads_task_func = function (tasks) {
     return function (callback) {
-      Utils.async.parallel_wait(1 * 1000, tasks, function (err, result) {
+      Utils.async.parallel_wait(2 * 1000, tasks, function (err, result) {
         callback(err, null);
       });
     };
